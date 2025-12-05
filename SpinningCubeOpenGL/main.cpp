@@ -18,11 +18,75 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
+#include <fstream>
 
 
 
 const int width = 700;
 const int height = 700;
+
+
+
+// We create vertices array to draw a square
+// Apart from the coordinates, we add colors to each vertex
+GLfloat vertices[] =
+{	// Coordinates				// RGBA colors
+	-0.5f, -0.5f, 0.0f,		0.5f, 0.0f, 0.0f, 1.0f, // bottom left vertex
+	0.5f, -0.5f, 0.0f,		0.0f, 0.5f, 0.0f, 1.0f, // bottom right vertex
+	0.5f, 0.5f, 0.0f,		0.0f, 0.0f, 0.5f, 1.0f, // upper right vertex
+	-0.5f, 0.5f, 0.0f,		1.0f, 1.0f, 1.0f, 1.0f, // upper left vertex
+};
+
+// In order to draw a square, we draw two triangles actually
+// We need an indices array to tell OpenGL how to draw the triangles
+GLuint indices[] =
+{
+	0, 1, 2,
+	2, 3, 0
+};
+
+
+
+
+
+
+
+
+// Function we will use temporally
+std::string get_file_contents(const char* filename)
+{
+	std::ifstream in(filename, std::ios::binary);
+	if (in)
+	{
+		std::string contents;
+		in.seekg(0, std::ios::end);
+		contents.resize(in.tellg());
+		in.seekg(0, std::ios::beg);
+		in.read(&contents[0], contents.size());
+		in.close();
+		return(contents);
+	}
+	throw(errno);
+}
+
+
+
+
+/*
+1 - Create some vertices for our triangle
+2 - After configuring view port:
+	- Create vertex shader
+	- Create fragment shader
+	- Create shader program and attach shaders to it, and link the program
+	- We create VAO and VBO in order to send info about vertices to GPU
+3 - In the loop where we mantain our window open:
+	- Use the program
+	- Bind Vertex array
+	- Draw arrays
+4 - Delete vertex arrays, buffers, program
+*/
+
+
 
 
 int main()
@@ -67,11 +131,73 @@ int main()
 
 	// Now we are going to configure our window (viewport, color) and will swap buffers
 	glViewport(0, 0, width, height);
+
+
+	// -----------------------------------------------------------
+
+
+	// Now we will create vertex and fragment shaders and put them in a shader program
+	std::string vertexCode = get_file_contents("default.vert");
+	const char* vertexSource = vertexCode.c_str();
+	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertexShader, 1, &vertexSource, 0);
+	glCompileShader(vertexShader);
+
+	std::string fragmentCode = get_file_contents("default.frag");
+	const char* fragmentSource = fragmentCode.c_str();
+	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShader, 1, &fragmentSource, 0);
+	glCompileShader(fragmentShader);
+
+	// We create the shader program, attach the shaders and link them
+	GLuint shaderProgram = glCreateProgram();
+	glAttachShader(shaderProgram, vertexShader);
+	glAttachShader(shaderProgram, fragmentShader);
+	glLinkProgram(shaderProgram);
+
+	// Now we can actually delete the shaders
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);
+
+
+	// -----------------------------------------------------------
+
+
+	// We create VAO, VBO and EBO
+	GLuint VAO, VBO, EBO;
+
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
+
+	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+
+		// We load data into VBO and EBO
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	// We load attributes to VAO
+	// VBO
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	// EBO
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(3*sizeof(float)));
+	glEnableVertexAttribArray(1);
+
+	// Unbinding for caution
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+
+	// -----------------------------------------------------------
+
+
 	glClearColor(0.1f, 0.0f, 0.1f, 1.0f);
-	
 	// We have to clear the color buffer bit
 	glClear(GL_COLOR_BUFFER_BIT);
-
 	// We have to swap buffers so that OpenGL displays this window on screen
 	glfwSwapBuffers(window);
 
@@ -84,6 +210,13 @@ int main()
 	{
 		glClearColor(0.1f, 0.0f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		glUseProgram(shaderProgram);
+		glBindVertexArray(VAO);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+
+
 		glfwSwapBuffers(window);
 
 		// This function processes events in the event queue and then returns immediately
@@ -93,11 +226,16 @@ int main()
 
 	// -----------------------------------------------------------
 
-	
+
 	// Now we free resources
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
+
+	glDeleteProgram(shaderProgram);
+
 	glfwDestroyWindow(window);
 	glfwTerminate();
-
 
 	
 	return 0;
