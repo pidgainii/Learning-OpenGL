@@ -233,6 +233,8 @@ int main()
 	// -----------------------------------------------------------
 
 
+	//glEnable(GL_DEPTH_TEST);
+
 	// Now we want to make sure our window remains open
 	while (!glfwWindowShouldClose(window))
 	{
@@ -276,7 +278,7 @@ int main()
 
 
 		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_LINE_LOOP, 36, GL_UNSIGNED_INT, 0);
 
 
 
