@@ -16,6 +16,8 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <iostream>
 #include <fstream>
@@ -27,22 +29,48 @@ const int height = 700;
 
 
 
-// We create vertices array to draw a square
+// We create vertices array to draw a cube
 // Apart from the coordinates, we add colors to each vertex
-GLfloat vertices[] =
-{	// Coordinates				// RGBA colors
-	-0.5f, -0.5f, 0.0f,		0.5f, 0.0f, 0.0f, 1.0f, // bottom left vertex
-	0.5f, -0.5f, 0.0f,		0.0f, 0.5f, 0.0f, 1.0f, // bottom right vertex
-	0.5f, 0.5f, 0.0f,		0.0f, 0.0f, 0.5f, 1.0f, // upper right vertex
-	-0.5f, 0.5f, 0.0f,		1.0f, 1.0f, 1.0f, 1.0f, // upper left vertex
+GLfloat vertices[] = {
+	// Front face vertices
+	-0.3f, 0.0f, 0.3f,		0.1f, 1.0f, 0.1f, 1.0f, // bottom left 
+	0.3f, 0.0f, 0.3f,		0.1f, 1.0f, 0.1f, 1.0f, // bottom right
+	0.3f, 0.6f, 0.3f,		0.1f, 1.0f, 0.1f, 1.0f, // upper right
+	-0.3f, 0.6f, 0.3f,		0.1f, 1.0f, 0.1f, 1.0f, // upper left
+
+	// Back face vertices
+	-0.3f, 0.0f, -0.3f,		0.1f, 1.0f, 0.1f, 1.0f, // bottom left
+	0.3f, 0.0f, -0.3f,		0.1f, 1.0f, 0.1f, 1.0f, // bottom right
+	0.3f, 0.6f, -0.3f,		0.1f, 1.0f, 0.1f, 1.0f, // upper right
+	-0.3f, 0.6f, -0.3f,		0.1f, 1.0f, 0.1f, 1.0f, // upper left
+
 };
 
-// In order to draw a square, we draw two triangles actually
-// We need an indices array to tell OpenGL how to draw the triangles
-GLuint indices[] =
-{
+
+GLuint indices[] = {
+	// front face
 	0, 1, 2,
-	2, 3, 0
+	2, 3, 0,
+
+	// right face
+	1, 5, 2,
+	2, 6, 5,
+
+	// back face
+	4, 5, 6,
+	6, 7, 4,
+
+	// left face
+	0, 4, 3,
+	4, 7, 3,
+
+	// upper face
+	3, 2, 6,
+	3, 7, 6,
+
+	// bottom face
+	0, 1, 5,
+	0, 4, 5
 };
 
 
@@ -195,7 +223,7 @@ int main()
 	// -----------------------------------------------------------
 
 
-	glClearColor(0.1f, 0.0f, 0.1f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	// We have to clear the color buffer bit
 	glClear(GL_COLOR_BUFFER_BIT);
 	// We have to swap buffers so that OpenGL displays this window on screen
@@ -208,10 +236,45 @@ int main()
 	// Now we want to make sure our window remains open
 	while (!glfwWindowShouldClose(window))
 	{
-		glClearColor(0.1f, 0.0f, 0.1f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glUseProgram(shaderProgram);
+
+
+
+		// Here we are going to create the matrices in order to be able
+		// make transformations and visualize our cube
+
+		// we initialize the matrices
+		glm::mat4 modelWorld = glm::mat4(1.0f);
+		glm::mat4 worldView = glm::mat4(1.0f);
+		glm::mat4 viewProj = glm::mat4(1.0f);
+
+
+		// We create the transformations
+		// For the model matrix, we will rotate our cube, giving it 3 parameters:
+		// The model, the radians, and the axis
+		modelWorld = glm::rotate(modelWorld, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		// We move the world in the opposite direction we would move the camera
+		// In this case, we will move it a bit further to negative z
+		worldView = glm::translate(worldView, glm::vec3(0.0f, 0.0f, -5.0f));
+		
+		viewProj = glm::perspective(glm::radians(45.0f), (float)(width / height), 1.0f, 10.0f);
+
+
+
+		// We need pointers to know where should we send these matrices
+		int modelWorldLoc = glGetUniformLocation(shaderProgram, "model");
+		int worldViewLoc = glGetUniformLocation(shaderProgram, "view");
+		int viewProjLoc = glGetUniformLocation(shaderProgram, "proj");
+
+		glUniformMatrix4fv(modelWorldLoc, 1, GL_FALSE, glm::value_ptr(modelWorld));
+		glUniformMatrix4fv(worldViewLoc, 1, GL_FALSE, glm::value_ptr(worldView));
+		glUniformMatrix4fv(viewProjLoc, 1, GL_FALSE, glm::value_ptr(viewProj));
+
+
+
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 

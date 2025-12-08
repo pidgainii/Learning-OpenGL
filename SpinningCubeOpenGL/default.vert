@@ -21,12 +21,17 @@
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec4 aColor;
 
+
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 proj;
+
 out vec4 color;
 
 void main()
 {
 	// Coordinates are actually 4d. It's complex
 	// For now we'll just add 1.0
-	gl_Position = vec4(aPos, 1.0);
+	gl_Position = proj * view * model * vec4(aPos, 1.0);
 	color = aColor;
 }
