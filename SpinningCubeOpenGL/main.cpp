@@ -33,16 +33,16 @@ const int height = 700;
 // Apart from the coordinates, we add colors to each vertex
 GLfloat vertices[] = {
 	// Front face vertices
-	-0.3f, 0.0f, 0.3f,		0.1f, 1.0f, 0.1f, 1.0f, // bottom left 
-	0.3f, 0.0f, 0.3f,		0.1f, 1.0f, 0.1f, 1.0f, // bottom right
-	0.3f, 0.6f, 0.3f,		0.1f, 1.0f, 0.1f, 1.0f, // upper right
-	-0.3f, 0.6f, 0.3f,		0.1f, 1.0f, 0.1f, 1.0f, // upper left
+	-0.3f, -0.3f, 0.3f,		0.1f, 1.0f, 0.1f, 1.0f, // bottom left 
+	0.3f, -0.3f, 0.3f,		0.1f, 1.0f, 0.1f, 1.0f, // bottom right
+	0.3f, 0.3f, 0.3f,		0.1f, 1.0f, 0.1f, 1.0f, // upper right
+	-0.3f, 0.3f, 0.3f,		0.1f, 1.0f, 0.1f, 1.0f, // upper left
 
 	// Back face vertices
-	-0.3f, 0.0f, -0.3f,		0.1f, 1.0f, 0.1f, 1.0f, // bottom left
-	0.3f, 0.0f, -0.3f,		0.1f, 1.0f, 0.1f, 1.0f, // bottom right
-	0.3f, 0.6f, -0.3f,		0.1f, 1.0f, 0.1f, 1.0f, // upper right
-	-0.3f, 0.6f, -0.3f,		0.1f, 1.0f, 0.1f, 1.0f, // upper left
+	-0.3f, -0.3f, -0.3f,		0.1f, 1.0f, 0.1f, 1.0f, // bottom left
+	0.3f, -0.3f, -0.3f,		0.1f, 1.0f, 0.1f, 1.0f, // bottom right
+	0.3f, 0.3f, -0.3f,		0.1f, 1.0f, 0.1f, 1.0f, // upper right
+	-0.3f, 0.3f, -0.3f,		0.1f, 1.0f, 0.1f, 1.0f, // upper left
 
 };
 
@@ -70,7 +70,7 @@ GLuint indices[] = {
 
 	// bottom face
 	0, 1, 5,
-	0, 4, 5
+	5, 4, 0
 };
 
 
@@ -235,9 +235,20 @@ int main()
 
 	//glEnable(GL_DEPTH_TEST);
 
+	float degrees = 0.0f;
+	float previous = glfwGetTime();
+	float current = glfwGetTime();
+
 	// Now we want to make sure our window remains open
 	while (!glfwWindowShouldClose(window))
 	{
+		current = glfwGetTime();
+		if (current - previous >= 1.0f / 60.0f)
+		{
+			degrees += 0.75f;
+			previous = current;
+		}
+
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
@@ -257,12 +268,12 @@ int main()
 		// We create the transformations
 		// For the model matrix, we will rotate our cube, giving it 3 parameters:
 		// The model, the radians, and the axis
-		modelWorld = glm::rotate(modelWorld, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		modelWorld = glm::rotate(modelWorld, glm::radians(degrees), glm::vec3(0.0f, 1.0f, 0.0f));
 		// We move the world in the opposite direction we would move the camera
 		// In this case, we will move it a bit further to negative z
-		worldView = glm::translate(worldView, glm::vec3(0.0f, 0.0f, -5.0f));
+		worldView = glm::translate(worldView, glm::vec3(0.0f, 0.0f, -0.8f));
 		
-		viewProj = glm::perspective(glm::radians(45.0f), (float)(width / height), 1.0f, 10.0f);
+		viewProj = glm::perspective(glm::radians(120.0f), (float)(width / height), 0.1f, 10.0f);
 
 
 
