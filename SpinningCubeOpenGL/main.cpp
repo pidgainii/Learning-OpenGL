@@ -233,9 +233,13 @@ int main()
 	// -----------------------------------------------------------
 
 
-	//glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_TEST);
 
 	float degrees = 0.0f;
+	float movementX = 0.0f;
+	float movementZ = 0.0f;
+
+
 	float previous = glfwGetTime();
 	float current = glfwGetTime();
 
@@ -245,12 +249,14 @@ int main()
 		current = glfwGetTime();
 		if (current - previous >= 1.0f / 60.0f)
 		{
-			degrees += 0.75f;
+			degrees += 0.5f;
+			//movementX += 0.001f;
+			movementZ += 0.05f;
 			previous = current;
 		}
 
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glUseProgram(shaderProgram);
 
@@ -268,12 +274,13 @@ int main()
 		// We create the transformations
 		// For the model matrix, we will rotate our cube, giving it 3 parameters:
 		// The model, the radians, and the axis
-		modelWorld = glm::rotate(modelWorld, glm::radians(degrees), glm::vec3(0.0f, 1.0f, 0.0f));
+		modelWorld = glm::rotate(modelWorld, glm::radians(degrees), glm::vec3(0.0f, 0.0f, 1.0f));
+		modelWorld = glm::translate(modelWorld, glm::vec3(movementX, 0.0f, movementZ));
 		// We move the world in the opposite direction we would move the camera
 		// In this case, we will move it a bit further to negative z
-		worldView = glm::translate(worldView, glm::vec3(0.0f, 0.0f, -0.8f));
+		worldView = glm::translate(worldView, glm::vec3(0.0f, 0.0f, -25.0f));
 		
-		viewProj = glm::perspective(glm::radians(120.0f), (float)(width / height), 0.1f, 10.0f);
+		viewProj = glm::perspective(glm::radians(120.0f), (float)(width / height), 0.1f, 30.0f);
 
 
 
