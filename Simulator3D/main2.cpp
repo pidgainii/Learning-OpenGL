@@ -117,7 +117,7 @@ int main()
     ShaderProgram shaderP = ShaderProgram("default.vert", "default.frag");
 
 
-
+    /*
     unsigned int VBO, VAO, EBO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -140,6 +140,28 @@ int main()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     glBindVertexArray(0);
+    */
+
+    
+    VAO vao = VAO::VAO();
+    VBO vbo = VBO::VBO();
+    EBO ebo = EBO::EBO();
+
+    vao.Bind();
+
+    vbo.Bind();
+    vbo.LoadData(vertices2, sizeof(vertices2));
+
+    ebo.Bind();
+    ebo.LoadData(indices2, sizeof(indices2));
+
+    vao.loadAttributes(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)0);
+    vao.loadAttributes(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(3*sizeof(float)));
+
+    vbo.Unbind();
+    vao.UnBind();
+    
+
 
 
 
@@ -162,9 +184,8 @@ int main()
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // draw our first triangle
-        shaderP.ActivateProgram();
 
+        shaderP.ActivateProgram();
 
 
         modelWorld = glm::rotate(modelWorld, glm::radians(degrees), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -172,8 +193,9 @@ int main()
         shaderP.setMVP(modelWorld, worldView, viewProj);
 
         
-        //glUseProgram(shaderProgram);
-        glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized);
+        
+        //glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized);
+        vao.Bind();
         glDrawElements(GL_LINE_LOOP, 36, GL_UNSIGNED_INT, 0);
 
 
@@ -185,9 +207,18 @@ int main()
 
     // optional: de-allocate all resources once they've outlived their purpose:
     // ------------------------------------------------------------------------
+    
+    /*
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
     glDeleteBuffers(1, &EBO);
+    */
+    
+    
+    vao.Delete();
+    vbo.Delete();
+    ebo.Delete();
+    
     shaderP.DeleteProgram();
 
     // glfw: terminate, clearing all previously allocated GLFW resources.

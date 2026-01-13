@@ -25,8 +25,10 @@ const unsigned int SCR_HEIGHT = 600;
 
 int main2()
 {
-	Simulation sim(SCR_WIDTH, SCR_HEIGHT);
-	sim.Run();
+	Simulation sim;
+	sim.Run(SCR_WIDTH, SCR_HEIGHT);
+
+	return 0;
 }
 
 
