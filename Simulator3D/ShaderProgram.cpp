@@ -20,6 +20,10 @@
 #include<fstream>
 #include<sstream>
 
+
+ShaderProgram::ShaderProgram() {}
+
+
 ShaderProgram::ShaderProgram(const char* vertexPath, const char* fragmentPath)
 {
 	std::string vertexCode;
@@ -109,13 +113,23 @@ void ShaderProgram::DeleteProgram()
 	glDeleteProgram(program);
 }
 
-void ShaderProgram::setMVP(glm::mat4 modelWorld, glm::mat4 worldView, glm::mat4 viewProj)
+void ShaderProgram::setM(glm::mat4 modelWorld)
 {
 	int modelWorldLoc = glGetUniformLocation(program, "model");
+	
+	glUniformMatrix4fv(modelWorldLoc, 1, GL_FALSE, glm::value_ptr(modelWorld));
+}
+
+void ShaderProgram::setV(glm::mat4 worldView)
+{
 	int worldViewLoc = glGetUniformLocation(program, "view");
+	
+	glUniformMatrix4fv(worldViewLoc, 1, GL_FALSE, glm::value_ptr(worldView));
+}
+
+void ShaderProgram::setP(glm::mat4 viewProj)
+{
 	int viewProjLoc = glGetUniformLocation(program, "proj");
 
-	glUniformMatrix4fv(modelWorldLoc, 1, GL_FALSE, glm::value_ptr(modelWorld));
-	glUniformMatrix4fv(worldViewLoc, 1, GL_FALSE, glm::value_ptr(worldView));
 	glUniformMatrix4fv(viewProjLoc, 1, GL_FALSE, glm::value_ptr(viewProj));
 }

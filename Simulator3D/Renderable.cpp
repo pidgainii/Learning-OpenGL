@@ -14,30 +14,12 @@
 
 
 
-#include "VAO.h"
+#include "Renderable.h"
 
 
-VAO::VAO() {
-	glGenVertexArrays(1, &vao);
-}
 
-
-void VAO::Bind()
+Renderable::Renderable(Mesh m, glm::mat4 mat)
 {
-	glBindVertexArray(vao);
-}
-void VAO::Unbind()
-{
-	glBindVertexArray(0);
-}
-
-void VAO::LoadAttributes(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void* pointer)
-{
-	glVertexAttribPointer(index, size, type, normalized, stride, pointer);
-	glEnableVertexAttribArray(index);
-}
-
-void VAO::Delete()
-{
-	glDeleteVertexArrays(1, &vao);
+	mesh = m;
+	modelWorld = mat;
 }

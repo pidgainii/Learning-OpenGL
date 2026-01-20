@@ -12,6 +12,7 @@
  * limitations under the License.
  */
 
+#pragma once
 
 
 #include <glad/glad.h>
@@ -25,9 +26,9 @@ class VAO {
 		VAO();
 
 		void Bind();
-		void UnBind();
+		void Unbind();
 
-		void loadAttributes(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void* pointer);
+		void LoadAttributes(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void* pointer);
 
 		void Delete();
 };

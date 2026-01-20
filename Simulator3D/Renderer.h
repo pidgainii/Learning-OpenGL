@@ -12,10 +12,16 @@
  * limitations under the License.
  */
 
+#pragma once
 
 #include "VAO.h"
 #include "VBO.h"
 #include "EBO.h"
+#include "ShaderProgram.h"
+#include "Renderable.h"
+
+#include <string>
+#include <vector>
 
 
 
@@ -23,7 +29,37 @@ class Renderer
 {
 	public:
 
-		VAO vao;
-		VBO vbo;
-		EBO ebo;
+		GLFWwindow* window;
+		ShaderProgram shaderProgram;
+
+
+
+		/* This function will :
+			load GL functions
+			glviewport
+			load shaders
+			initialize buffer objects, bind them, load data, unbind them
+		*/
+		void Init();
+
+		void Clear();
+
+		void EnableDepthTest();
+
+		void ActivateShaders();
+
+		void setModelMatrix(glm::mat4 modelWorld);
+
+		void setCameraMatrix(glm::mat4 worldView, glm::mat4 viewProj);
+
+		void DrawElements(std::vector<Renderable> scene);
+
+		bool windowShouldClose();
+
+		void SwapBuffers();
+
+		void ProcessEvents();
+
+		// delete buffers and shader program
+		void Clean();
 };

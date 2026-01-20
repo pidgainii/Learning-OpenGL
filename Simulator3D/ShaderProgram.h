@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-
+#pragma once
 
 
 #include <glad/glad.h>
@@ -24,11 +24,15 @@ class ShaderProgram {
 	public: 
 		GLuint program;
 
+		ShaderProgram();
+
 		ShaderProgram(const char* vertexPath, const char* fragmentPath);
 
 		void ActivateProgram();
 
 		void DeleteProgram();
 
-		void setMVP(glm::mat4 modelWorld, glm::mat4 worldView, glm::mat4 viewProj);
+		void setM(glm::mat4 modelWorld);
+		void setV(glm::mat4 worldView);
+		void setP(glm::mat4 viewProj);
 };

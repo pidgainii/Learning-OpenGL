@@ -12,32 +12,20 @@
  * limitations under the License.
  */
 
+#pragma once
+
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
+#include <glm/gtc/matrix_transform.hpp>
+
+#include "Mesh.h"
 
 
-#include "VAO.h"
+class Renderable {
+	public:
+		Renderable(Mesh mesh, glm::mat4 m);
 
-
-VAO::VAO() {
-	glGenVertexArrays(1, &vao);
-}
-
-
-void VAO::Bind()
-{
-	glBindVertexArray(vao);
-}
-void VAO::Unbind()
-{
-	glBindVertexArray(0);
-}
-
-void VAO::LoadAttributes(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void* pointer)
-{
-	glVertexAttribPointer(index, size, type, normalized, stride, pointer);
-	glEnableVertexAttribArray(index);
-}
-
-void VAO::Delete()
-{
-	glDeleteVertexArrays(1, &vao);
-}
+		Mesh mesh;
+		glm::mat4 modelWorld;
+};

@@ -12,32 +12,24 @@
  * limitations under the License.
  */
 
+#pragma once
 
+#include <GLFW/glfw3.h>
 
 #include "VAO.h"
+#include "VBO.h"
+#include "EBO.h"
 
 
-VAO::VAO() {
-	glGenVertexArrays(1, &vao);
-}
-
-
-void VAO::Bind()
+class Mesh
 {
-	glBindVertexArray(vao);
-}
-void VAO::Unbind()
-{
-	glBindVertexArray(0);
-}
+	public:
 
-void VAO::LoadAttributes(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void* pointer)
-{
-	glVertexAttribPointer(index, size, type, normalized, stride, pointer);
-	glEnableVertexAttribArray(index);
-}
+		VAO vao;
+		VBO vbo;
+		EBO ebo;
 
-void VAO::Delete()
-{
-	glDeleteVertexArrays(1, &vao);
-}
+		GLsizei indexCount;
+
+		Mesh(GLfloat* vertices, GLuint* indices, GLsizei i);
+};

@@ -18,15 +18,17 @@
 #include <GLFW/glfw3.h>
 
 #include "Simulation.h"
+#include "Renderer.h"
 
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
-int main2()
+int main()
 {
 	Simulation sim;
-	sim.Run(SCR_WIDTH, SCR_HEIGHT);
+	Renderer renderer;
+	sim.Run(renderer);
 
 	return 0;
 }

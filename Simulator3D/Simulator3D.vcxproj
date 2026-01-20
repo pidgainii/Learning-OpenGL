@@ -23,6 +23,8 @@
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main2.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="Renderable.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="Simulation.cpp" />
@@ -35,6 +37,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EBO.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Renderable.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="Simulation.h" />

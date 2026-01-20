@@ -15,7 +15,7 @@
 
 
 
-
+/*
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -110,37 +110,8 @@ int main()
     glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 
 
-
-    // build and compile our shader program
-    // ------------------------------------
-    // vertex shader
     ShaderProgram shaderP = ShaderProgram("default.vert", "default.frag");
 
-
-    /*
-    unsigned int VBO, VAO, EBO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
-    // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2), vertices2, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices2), indices2, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)0); // position
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(3 * sizeof(float))); // color
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-
-    // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    glBindVertexArray(0);
-    */
 
     
     VAO vao = VAO::VAO();
@@ -155,11 +126,11 @@ int main()
     ebo.Bind();
     ebo.LoadData(indices2, sizeof(indices2));
 
-    vao.loadAttributes(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)0);
-    vao.loadAttributes(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(3*sizeof(float)));
+    vao.LoadAttributes(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)0);
+    vao.LoadAttributes(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(3*sizeof(float)));
 
     vbo.Unbind();
-    vao.UnBind();
+    vao.Unbind();
     
 
 
@@ -178,9 +149,6 @@ int main()
 
     while (!glfwWindowShouldClose(window))
     {
-
-        // render
-        // ------
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -192,12 +160,8 @@ int main()
 
         shaderP.setMVP(modelWorld, worldView, viewProj);
 
-        
-        
-        //glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized);
         vao.Bind();
         glDrawElements(GL_LINE_LOOP, 36, GL_UNSIGNED_INT, 0);
-
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -205,24 +169,13 @@ int main()
 
 
 
-    // optional: de-allocate all resources once they've outlived their purpose:
-    // ------------------------------------------------------------------------
-    
-    /*
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
-    */
-    
-    
     vao.Delete();
     vbo.Delete();
     ebo.Delete();
     
     shaderP.DeleteProgram();
 
-    // glfw: terminate, clearing all previously allocated GLFW resources.
-    // ------------------------------------------------------------------
     glfwTerminate();
     return 0;
 }
+*/
