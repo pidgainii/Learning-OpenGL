@@ -14,6 +14,9 @@
 
 
 
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "Simulation.h"
 
@@ -79,6 +82,13 @@ GLuint indices[] = {
 Simulation::Simulation()
 {
 	renderer = Renderer();
+
+	time = 0.0f;
+
+	worldView = glm::mat4(1.0f);
+	viewProj = glm::mat4(1.0f);
+	worldView = glm::translate(worldView, glm::vec3(0.0f, 0.0f, -5.0f));
+	viewProj = glm::perspective(glm::radians(120.0f), 800.0f/600.0f, 0.1f, 30.0f);
 }
 
 
@@ -88,7 +98,7 @@ void Simulation::Run(Renderer r)
 	SetUp(r);
 
 	// maybe some functions will be moved to a different class, not the renderer
-	while (renderer.windowShouldClose())
+	while (!renderer.windowShouldClose())
 	{
 		Update();
 	}
@@ -104,24 +114,19 @@ void Simulation::SetUp(Renderer r)
 	renderer.Init();
 
 
-	time = 0.0f;
-
 	// here we need to create meshes and objects to create our scene
 	// temporary mesh and scene
-	Mesh mesh1 = Mesh(vertices, indices, 36);
+	Mesh* mesh1 = new Mesh(vertices, indices, 36);
 	glm::mat4 modelWorld1 = glm::mat4(1.0f);
-	glm::mat4 modelWorld2 = glm::translate(modelWorld1, glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat4 modelWorld2 = glm::translate(modelWorld1, glm::vec3(0.0f, 2.0f, 1.0f));
 	Renderable cube1 = Renderable(mesh1, modelWorld1);
 	Renderable cube2 = Renderable(mesh1, modelWorld2);
-	std::vector<Renderable> scene;
 	scene.push_back(cube1);
 	scene.push_back(cube2);
 	
 	// We also need to initialize shaders here somehow
 	// We need to initialize camera here somehow: MVP matrices
-	worldView = glm::mat4(1.0f);
-	viewProj = glm::mat4(1.0f);
-	renderer.setCameraMatrix(worldView, viewProj);
+	
 
 	// tell renderer to enable Depth test
 	renderer.EnableDepthTest();
@@ -147,7 +152,21 @@ void Simulation::Update()
 	// calculate object's positions according to time: MVP matrices actually
 	// set MVP matrices (send them to gpu i guess)
 	renderer.ActivateShaders();
-	
+
+	// --------------------------------------------------------------------------------------------------------------
+	// --------------------------------------------------------------------------------------------------------------
+	// --------------------------------------------------------------------------------------------------------------
+	// --------------------------------------------------------------------------------------------------------------
+	// --------------------------------------------------------------------------------------------------------------
+	// ERROR IVE BEEN SEARCHING FOR:
+	// MATRICES SHOULD BE SET AFTER THE SHADER IS ACTIVE 
+	renderer.setCameraMatrix(worldView, viewProj);
+	// --------------------------------------------------------------------------------------------------------------
+	// --------------------------------------------------------------------------------------------------------------
+	// --------------------------------------------------------------------------------------------------------------
+	// --------------------------------------------------------------------------------------------------------------
+
+
 	
 	// Tell renderer to draw every object (now only our cube)
 	// I guess we need to have renderable objects that can be sent

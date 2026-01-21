@@ -22,6 +22,8 @@
 // and then we have the access to vao vbo and ebo in order to be able
 // to draw the mesh
 
+
+
 Mesh::Mesh(GLfloat* vertices, GLuint* indices, GLsizei i)
 {
 	indexCount = i;
@@ -34,15 +36,27 @@ Mesh::Mesh(GLfloat* vertices, GLuint* indices, GLsizei i)
 	vao.Bind();
 
 	vbo.Bind();
-	vbo.LoadData(&vertices, sizeof(vertices));
+	vbo.LoadData(vertices, 8 * 7 * sizeof(float));
 
 	ebo.Bind();
-	ebo.LoadData(&indices, sizeof(indices));
+	ebo.LoadData(indices, 36 * sizeof(GLuint));
 
-	// correct this and see how we can get info about this
+	// TODO: correct this and see how we can get info about this
 	vao.LoadAttributes(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)0);
 	vao.LoadAttributes(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(3 * sizeof(float)));
 
 	vbo.Unbind();
 	vao.Unbind();
 }
+
+
+
+Mesh::Mesh()
+{
+	indexCount = 0;
+	
+	vao = VAO::VAO();
+	vbo = VBO::VBO();
+	ebo = EBO::EBO();
+}
+

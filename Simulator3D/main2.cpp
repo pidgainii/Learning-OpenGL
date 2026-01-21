@@ -15,7 +15,7 @@
 
 
 
-/*
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -85,7 +85,7 @@ unsigned int indices2[] = {
 
 
 
-int main()
+int main2()
 {
     // glfw: initialize and configure
     // ------------------------------
@@ -158,7 +158,9 @@ int main()
 
         modelWorld = glm::rotate(modelWorld, glm::radians(degrees), glm::vec3(0.0f, 1.0f, 0.0f));
 
-        shaderP.setMVP(modelWorld, worldView, viewProj);
+        shaderP.setM(modelWorld);
+        shaderP.setV(worldView);
+        shaderP.setP(viewProj);
 
         vao.Bind();
         glDrawElements(GL_LINE_LOOP, 36, GL_UNSIGNED_INT, 0);
@@ -178,4 +180,3 @@ int main()
     glfwTerminate();
     return 0;
 }
-*/

@@ -14,8 +14,6 @@
 
 #pragma once
 
-#include <GLFW/glfw3.h>
-
 #include "VAO.h"
 #include "VBO.h"
 #include "EBO.h"
@@ -25,11 +23,16 @@ class Mesh
 {
 	public:
 
+		Mesh(GLfloat* vertices, GLuint* indices, GLsizei i);
+		Mesh();
+
+		// Prevent copying
+		Mesh(const Mesh&) = delete;
+		Mesh& operator=(const Mesh&) = delete;
+		
 		VAO vao;
 		VBO vbo;
 		EBO ebo;
 
 		GLsizei indexCount;
-
-		Mesh(GLfloat* vertices, GLuint* indices, GLsizei i);
 };

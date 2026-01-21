@@ -14,8 +14,6 @@
 
 
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
 
 #include "Simulation.h"
 #include "Renderer.h"

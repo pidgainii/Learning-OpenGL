@@ -13,10 +13,7 @@
  */
 
 #pragma once
-
 #include <glad/glad.h>
-#include <GLFW/glfw3.h>
-
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Mesh.h"
@@ -24,8 +21,8 @@
 
 class Renderable {
 	public:
-		Renderable(Mesh mesh, glm::mat4 m);
+		Renderable(Mesh* mesh, glm::mat4 m);
 
-		Mesh mesh;
+		Mesh* mesh;
 		glm::mat4 modelWorld;
 };

@@ -16,6 +16,7 @@
 #include "VBO.h"
 
 
+
 VBO::VBO()
 {
 	glGenBuffers(1, &vbo);

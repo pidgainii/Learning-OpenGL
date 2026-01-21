@@ -13,12 +13,11 @@
  */
 
 
-
 #include "Renderable.h"
 
 
 
-Renderable::Renderable(Mesh m, glm::mat4 mat)
+Renderable::Renderable(Mesh* m, glm::mat4 mat)
 {
 	mesh = m;
 	modelWorld = mat;

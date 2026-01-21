@@ -46,7 +46,7 @@ void Renderer::Init()
 	gladLoadGL();
 
 	// TODO: make variables for width and height
-	glViewport(0, 0, 700, 600);
+	glViewport(0, 0, 800, 600);
 
 
 	// TODO: specify shaders in some other way
@@ -97,11 +97,11 @@ void Renderer::DrawElements(std::vector<Renderable> scene)
 	for (Renderable r : scene)
 	{
 		shaderProgram.setM(r.modelWorld);
-		r.mesh.vao.Bind();
+		r.mesh->vao.Bind();
 
 		// the index count is how many indices to draw, mesh should know that
 		// also it should know the draw mode
-		glDrawElements(GL_LINE_LOOP, r.mesh.indexCount, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_LINE_LOOP, r.mesh->indexCount, GL_UNSIGNED_INT, 0);
 	}
 }
 
