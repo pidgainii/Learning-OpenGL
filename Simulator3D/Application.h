@@ -14,16 +14,33 @@
 
 
 #include "Renderer.h"
-
+#include "Loader.h"
+#include "Simulation.h"
 
 #pragma once
 
 
-class Simulation {
-	public:
-		Simulation();
+class Application {
+public:
+	Application();
 
-		void Update(float time, std::vector<Renderable> scene);
+	void Run();
+	void Setup();
+	void Terminate();
+
+	GLFWwindow* window;
+
+	float time;
+	Simulation sim;
+	Renderer renderer;
+	std::vector<Renderable> scene;
+	Loader loader;
+
+
+
+	// temporary, until camera class is created
+	glm::mat4 worldView;
+	glm::mat4 viewProj;
 };
 
 

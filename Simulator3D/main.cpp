@@ -15,8 +15,7 @@
 
 
 
-#include "Simulation.h"
-#include "Renderer.h"
+#include "Application.h"
 
 
 const unsigned int SCR_WIDTH = 800;
@@ -24,10 +23,8 @@ const unsigned int SCR_HEIGHT = 600;
 
 int main()
 {
-	Simulation sim;
-	Renderer renderer;
-	sim.Run(renderer);
-
+	Application app;
+	app.Run();
 	return 0;
 }
 

@@ -28,34 +28,23 @@
 // no need to do that here
 void Renderer::Init()
 {
-	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-	// TODO: make variables for width and height
-	window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
-	if (window == NULL)
-	{
-		std::cout << "Failed to create GLFW window" << std::endl;
-		glfwTerminate();
-	}
-	glfwMakeContextCurrent(window);
-
 	// Now we will activate OpenGL functions with GLAD loader
 	gladLoadGL();
 
 	// TODO: make variables for width and height
 	glViewport(0, 0, 800, 600);
 
-
 	// TODO: specify shaders in some other way
 	shaderProgram = ShaderProgram("default.vert", "default.frag");
+
+
+
+	EnableDepthTest();
 }
 
 
 
-void Renderer::Clear()
+void Clear()
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -66,7 +55,7 @@ void Renderer::EnableDepthTest()
 	glEnable(GL_DEPTH_TEST);
 }
 
-void Renderer::ActivateShaders()
+void ActivateShaders(ShaderProgram shaderProgram)
 {
 	shaderProgram.ActivateProgram();
 }
@@ -76,13 +65,13 @@ void Renderer::setModelMatrix(glm::mat4 modelWorld)
 	shaderProgram.setM(modelWorld);
 }
 
-void Renderer::setCameraMatrix(glm::mat4 worldView, glm::mat4 viewProj)
+void setCameraMatrix(ShaderProgram shaderProgram, glm::mat4 worldView, glm::mat4 viewProj)
 {
 	shaderProgram.setV(worldView);
 	shaderProgram.setP(viewProj);
 }
 
-void Renderer::DrawElements(std::vector<Renderable> scene)
+void DrawElements(ShaderProgram shaderProgram, std::vector<Renderable> scene)
 {
 	// for each element, the renderer should draw the mesh using the
 	// mesh vao, vbo and ebo i guess
@@ -102,24 +91,18 @@ void Renderer::DrawElements(std::vector<Renderable> scene)
 	}
 }
 
-bool Renderer::windowShouldClose()
+// TEMPORARY ARGUMENTS: worldView, viewProj
+void Renderer::Render(std::vector<Renderable> scene, glm::mat4 worldView, glm::mat4 viewProj)
 {
-	return glfwWindowShouldClose(window);
+	Clear();
+	ActivateShaders(shaderProgram);
+	setCameraMatrix(shaderProgram, worldView, viewProj);
+	DrawElements(shaderProgram, scene);
 }
 
-void Renderer::SwapBuffers()
-{
-	glfwSwapBuffers(window);
-}
 
-void Renderer::ProcessEvents()
-{
-	glfwPollEvents();
-}
 
 void Renderer::Clean()
 {
 	shaderProgram.DeleteProgram();
-
-	glfwTerminate();
 }

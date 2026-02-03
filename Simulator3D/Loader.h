@@ -12,19 +12,16 @@
  * limitations under the License.
  */
 
-
-#include "Renderer.h"
-
-
 #pragma once
 
 
-class Simulation {
-	public:
-		Simulation();
+#include "Renderable.h"
 
-		void Update(float time, std::vector<Renderable> scene);
+#include <vector>
+
+
+class Loader {
+public:
+	Loader();
+	void LoadScene(std::vector<Renderable>& scene);
 };
-
-
-
