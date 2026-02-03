@@ -32,6 +32,9 @@
     <ClCompile Include="Mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ObjLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="default.frag">
@@ -53,6 +56,9 @@
     </Filter>
     <Filter Include="Resource Files\Shaders">
       <UniqueIdentifier>{9d7334a5-0594-4bb6-9e1f-ba92cfcaffa8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Objects">
+      <UniqueIdentifier>{0abe1d2f-664e-486b-9ace-cd0529df83e3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -80,5 +86,13 @@
     <ClInclude Include="Mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ObjLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="airplane.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
   </ItemGroup>
 </Project>

@@ -17,8 +17,11 @@
 
 
 
-Renderable::Renderable(Mesh* m, glm::mat4 mat)
+Renderable::Renderable(Mesh* m, glm::mat4 mat, glm::vec3 t, glm::vec3 r)
 {
 	mesh = m;
 	modelWorld = mat;
+
+	translation = t;
+	rotation = r;
 }

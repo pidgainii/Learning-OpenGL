@@ -20,59 +20,7 @@
 
 #include "Simulation.h"
 
-
-
-
-
-
-
-
- // for now, we will have our cube here. Later, we will have a list of objects and a camera
-
-GLfloat vertices[] = {
-	-0.5f,  0.5f, 0.4f, 0.7f, 0.0f, 0.9f, 1.0f,  // 0: front top left
-	-0.5f, -0.7f, 0.4f, 0.3f, 0.0f, 0.9f, 1.0f,  // 1: front bottom left
-	0.6f, -0.5f, 0.4f, 0.8f, 0.0f, 0.8f, 1.0f,   // 2: front bottom right
-	0.5f,  0.4f, 0.4f, 0.5f, 0.0f, 0.9f, 1.0f,   // 3: front top right
-
-	-0.4f,  0.6f, -0.4f, 0.4f, 0.0f, 0.9f, 1.0f, // 4: back top left
-	-0.5f, -0.5f, -0.4f, 1.0f, 0.0f, 1.0f, 1.0f, // 5: back bottom left
-	0.4f, -0.45f, -0.4f, 0.9f, 0.0f, 0.9f, 1.0f, // 6: back bottom right
-	0.55f,  0.6f, -0.4f, 1.0f, 0.0f, 1.0f, 1.0f  // 7: back top right
-};
-GLuint indices[] = {
-	// front side
-	0, 1, 3,  // first Triangle
-	1, 2, 3,   // second Triangle
-
-	// right side
-	3, 2, 6,
-	6, 7, 3,
-
-	// posterior side
-	6, 5, 7,
-	7, 5, 4,
-
-	// left side
-	5, 1, 0,
-	0, 4, 5,
-
-	// bottom side
-	1, 5, 2,
-	2, 6, 5,
-
-	// upper side
-	0, 3, 4,
-	4, 7, 3
-};
-
-
-
-
-
-
-
-
+#include "ObjLoader.h"
 
 
 
@@ -85,9 +33,12 @@ Simulation::Simulation()
 
 	time = 0.0f;
 
+
+	// TEMPORARY UNTIL WE CREATE CAMERA
 	worldView = glm::mat4(1.0f);
 	viewProj = glm::mat4(1.0f);
-	worldView = glm::translate(worldView, glm::vec3(0.0f, 0.0f, -5.0f));
+	worldView = glm::translate(worldView, glm::vec3(0.0f, 0.0f, -3.0f));
+	worldView = glm::translate(worldView, glm::vec3(0.0f, -1.0f, 0.0f));
 	viewProj = glm::perspective(glm::radians(120.0f), 800.0f/600.0f, 0.1f, 30.0f);
 }
 
@@ -114,21 +65,9 @@ void Simulation::SetUp(Renderer r)
 	renderer.Init();
 
 
-	// here we need to create meshes and objects to create our scene
-	// temporary mesh and scene
-	Mesh* mesh1 = new Mesh(vertices, indices, 36);
-	glm::mat4 modelWorld1 = glm::mat4(1.0f);
-	glm::mat4 modelWorld2 = glm::translate(modelWorld1, glm::vec3(0.0f, 2.0f, 1.0f));
-	Renderable cube1 = Renderable(mesh1, modelWorld1);
-	Renderable cube2 = Renderable(mesh1, modelWorld2);
-	scene.push_back(cube1);
-	scene.push_back(cube2);
-	
-	// We also need to initialize shaders here somehow
-	// We need to initialize camera here somehow: MVP matrices
-	
+	LoadScene();
 
-	// tell renderer to enable Depth test
+
 	renderer.EnableDepthTest();
 
 }
@@ -137,6 +76,17 @@ void Simulation::SetUp(Renderer r)
 void Simulation::Update()
 {
 	
+	// Updating movement for each object in scene
+	for (Renderable& r : scene)
+	{
+		glm::mat4 mW = glm::translate(r.modelWorld, r.translation);
+		mW = glm::rotate(mW, glm::radians(0.025f), r.rotation);
+
+		r.modelWorld = mW;
+
+	}
+
+
 
 
 
@@ -194,4 +144,34 @@ void Simulation::Terminate()
 
 	// tell renderer to clear resources
 	renderer.Clean();
+}
+
+void Simulation::LoadScene()
+{
+	// Loading mesh for airplane
+	std::vector<float> vertices;
+	std::vector<unsigned int> indices;
+
+	loadOBJ("airplane.txt", vertices, indices);
+	Mesh* planeMesh = new Mesh(vertices, indices, indices.size());
+
+
+
+	// Creating Renderable objects
+	// TODO: Create ready to use scenes in JSON format
+	glm::mat4 modelWorld1 = glm::mat4(1.0f);
+	glm::mat4 modelWorld2 = glm::translate(modelWorld1, glm::vec3(0.0f, 2.0f, 1.0f));
+	glm::mat4 modelWorld3 = glm::rotate(modelWorld1, glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+
+	glm::vec3 translation1 = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 translation2 = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 rotation = glm::vec3(0.0f, 1.0f, 1.0f);
+
+	Renderable plane1 = Renderable(planeMesh, modelWorld3, translation1, rotation);
+	Renderable plane2 = Renderable(planeMesh, modelWorld2, translation2, rotation);
+
+
+	// Adding objects to our scene
+	scene.push_back(plane1);
+	scene.push_back(plane2);
 }

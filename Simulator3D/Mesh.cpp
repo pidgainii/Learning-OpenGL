@@ -24,7 +24,7 @@
 
 
 
-Mesh::Mesh(GLfloat* vertices, GLuint* indices, GLsizei i)
+Mesh::Mesh(std::vector<float> vertices, std::vector<unsigned int> indices, GLsizei i)
 {
 	indexCount = i;
 
@@ -35,11 +35,12 @@ Mesh::Mesh(GLfloat* vertices, GLuint* indices, GLsizei i)
 	// store vertices and indices in GPU
 	vao.Bind();
 
+	// TODO: Use variables, no hardcode numbers
 	vbo.Bind();
-	vbo.LoadData(vertices, 8 * 7 * sizeof(float));
-
+	vbo.LoadData(vertices.data(), vertices.size() * sizeof(float));
+	// TODO: same
 	ebo.Bind();
-	ebo.LoadData(indices, 36 * sizeof(GLuint));
+	ebo.LoadData(indices.data(), indices.size() * sizeof(GLuint));
 
 	// TODO: correct this and see how we can get info about this
 	vao.LoadAttributes(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)0);
@@ -48,7 +49,6 @@ Mesh::Mesh(GLfloat* vertices, GLuint* indices, GLsizei i)
 	vbo.Unbind();
 	vao.Unbind();
 }
-
 
 
 Mesh::Mesh()

@@ -21,8 +21,14 @@
 
 class Renderable {
 	public:
-		Renderable(Mesh* mesh, glm::mat4 m);
+		Renderable(Mesh* mesh, glm::mat4 m, glm::vec3 t, glm::vec3 r);
 
 		Mesh* mesh;
 		glm::mat4 modelWorld;
+
+		// temporary vector for movement representation
+		glm::vec3 translation;
+		
+		// temporary vector for rotation axis
+		glm::vec3 rotation;
 };

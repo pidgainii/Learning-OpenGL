@@ -69,25 +69,18 @@ void Renderer::EnableDepthTest()
 void Renderer::ActivateShaders()
 {
 	shaderProgram.ActivateProgram();
-	// here we should set worldView and viewProj matrixes
 }
 
 void Renderer::setModelMatrix(glm::mat4 modelWorld)
 {
-	// here we should set modelWorld matrix
 	shaderProgram.setM(modelWorld);
 }
 
 void Renderer::setCameraMatrix(glm::mat4 worldView, glm::mat4 viewProj)
 {
-	// here we should set WorldView and ViewProj matrices
 	shaderProgram.setV(worldView);
 	shaderProgram.setP(viewProj);
 }
-
-
-
-
 
 void Renderer::DrawElements(std::vector<Renderable> scene)
 {
@@ -101,7 +94,11 @@ void Renderer::DrawElements(std::vector<Renderable> scene)
 
 		// the index count is how many indices to draw, mesh should know that
 		// also it should know the draw mode
-		glDrawElements(GL_LINE_LOOP, r.mesh->indexCount, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, r.mesh->indexCount, GL_UNSIGNED_INT, 0);
+		
+
+		// TODO: put this in another place
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
 }
 
@@ -120,12 +117,8 @@ void Renderer::ProcessEvents()
 	glfwPollEvents();
 }
 
-// delete buffers and shader program
 void Renderer::Clean()
 {
-	// call mesh.clean for every object I guess.
-	// or maybe the simulation does this things
-	// yep
 	shaderProgram.DeleteProgram();
 
 	glfwTerminate();

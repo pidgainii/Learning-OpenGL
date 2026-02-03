@@ -41,11 +41,12 @@ class Simulation {
 		void SetUp(Renderer r);
 		void Update();
 		void Terminate();
+		void LoadScene();
 
 		float time;
 		Renderer renderer;
 
-		// temporary
+		// temporary, until camera class is created
 		glm::mat4 worldView;
 		glm::mat4 viewProj;
 

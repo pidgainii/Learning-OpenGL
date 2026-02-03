@@ -18,12 +18,14 @@
 #include "VBO.h"
 #include "EBO.h"
 
+#include <vector>
+
 
 class Mesh
 {
 	public:
 
-		Mesh(GLfloat* vertices, GLuint* indices, GLsizei i);
+		Mesh(std::vector<float> vertices, std::vector<unsigned int> indices, GLsizei i);
 		Mesh();
 
 		// Prevent copying
